@@ -1,0 +1,15 @@
+
+<div class="row top-title banner main">\
+	<div class="col-md-8 col-md-offset-1">
+		<a href="{{url_for('showBrands')}}">
+			<h1>Car Exhibition</h1>
+		</a>
+	</div>
+</div>
+<div class="col-md-offset-11 col-md-1 text-center login-logout">
+	{%if 'username' not in session %}
+		<a href="{{url_for('showLogin')}}"><h4>Login</h4></a>
+	{% else %}
+		<a href="{{url_for('disconnect')}}"><h4>Logout</h4></a>
+	{% endif %}
+</div>

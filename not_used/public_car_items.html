@@ -1,0 +1,63 @@
+{% extends "main.html" %}
+{% include "header.html" %}
+{% block content %}
+    <div class="row divider green">
+        <div class="col-md-12"></div>
+    </div>
+    <div>
+    <h2>haha</h2>
+    {% for car_brand in car_brands %}
+        <a href = "{{url_for('showMenu', car_brand_id = car_brand.id)}}">
+            <div class="row">
+                <div class="col-md-1"></div>
+                    <div class="col-md-10 restaurant-list">
+                        <h3>{{car_brand.name}}</h3>
+                    </div>
+                <div class="col-md-1"></div>
+            </div>
+        </a>
+    {% endfor %}
+    <h2>haha</h2>
+    </div>
+    <div class="row banner menu">
+        <div class="col-md-11 col-md-offset-1 padding-none">
+            <h1>{{ car_brand.name }}
+            <figure class="creator">
+                <img src="{{ url_for('static', filename='blank_user.gif') }}">
+                <figcaption>Menu creator's name goes here</figcaption>
+            </figure>
+            </h1>
+
+        </div>
+    </div>
+
+<div class = 'flash'>
+              {% with messages = get_flashed_messages() %}
+      {% if messages %}
+
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+
+</div>
+
+    {% if car_items !=[] %}
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-3">
+                    {% for i in car_items %}
+                            <div class="menu-item">
+                                <h3>{{i.name}}</h3>
+                                <p>{{i.description}}</p>
+                            </div>
+                    {% endfor %}
+            </div>
+
+        </div>
+    {% endif %}
+
+{% endblock %}

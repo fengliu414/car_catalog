@@ -1,0 +1,52 @@
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <div class='flash'>
+        <ul>
+        {% for message in messages %}
+            <li> {{ message }} </li>
+        {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+    {% endwith %}
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-1"></div>
+    </div>
+<div class="all-items">
+    <div class="car-brands">
+    <h2>Car Brands</h2>
+        <div class="half-col">
+        {% for each_brand in car_brands %}
+                <a href = "{{url_for('showItem', car_brand_id = each_brand.id)}}">
+                    {% if car_brand and (car_brand==each_brand)%}
+                        <div class="selected-brand">
+                        <h3>{{each_brand.name}}</h3>
+                    {% else %}
+                        <div class="brand-list">
+                        <h3>{{each_brand.name}}</h3>
+                    {% endif %}
+                    </div>
+                </a>
+        {% endfor %}
+        </div>
+    </div>
+    <div class="car-items">
+    <h2>
+        <span>Car Models <small>(latest {{num}} items)</small></span>
+        {% if car_brand %}
+            <span class="add-item"><a href="{{url_for('newCarItem', car_brand_id=car_brand.id)}}"><small class="add-new">Create <i class="fa fa-car" aria-hidden="true"></i></small></a></span>
+        {% endif %}
+    </h2>
+        <div class="half-col">
+        {% for car_item in car_items %}
+            <a href = "{{url_for('showCarItem', car_brand_id=car_item.car_brand_id, car_item_id=car_item.id)}}">
+                    <div class="item-half item-list">
+                        <h6>{{car_item.name}}</h6>
+                    </div>
+            </a>
+        {% endfor %}
+        </div>
+    </div>
+</div>
