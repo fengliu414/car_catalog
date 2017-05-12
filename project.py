@@ -53,7 +53,7 @@ def getUserID(email):
 @app.route('/login')
 def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
-                    for x in xrange(32))
+                    for x in range(32))
     login_session['state'] = state
     # return "The current session state is %s" % login_session['state']
     return render_template('login.html', STATE=state)
@@ -78,11 +78,14 @@ def fbconnect():
           % (app_id, app_secret, access_token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
-
+    print "haha"
+    print result
+    print "haha"
     # strip expire tag from access token
     itm = result.split(":")[1]
     itm1 = itm.split(",")[0]
     token = itm1.split('"')[1]
+    print token
 
     url = 'https://graph.facebook.com/v2.4/me?%s&fields=name,id,email' % token
     h = httplib2.Http()
@@ -133,11 +136,12 @@ def fbdisconnect():
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
-    url = 'https://graph.facebook.com/%s/permissions?access_token='
-    '%s' % (facebook_id, access_token)
+    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' \
+          % (facebook_id, access_token)
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
-    return "You have been logged out"
+    flash("You have been logged out!")
+    return result
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -263,8 +267,9 @@ def itemsOfCarBrandJSON(car_brand_id):
 
 @app.route('/car_brand/<int:car_brand_id>/car_item/<int:car_item_id>/JSON')
 def carItemJSON(car_brand_id, car_item_id):
+    car_brand = session.query(CarBrand).filter_by(id=car_brand_id).one()
     car_item = session.query(CarItem).filter_by(id=car_item_id).one()
-    return jsonify(CarItem=car_item.serialize)
+    return jsonify(CarItem=car_item.serialize, CarBrand=car_brand.serialize)
 
 
 @app.route('/car_brand/JSON')
@@ -346,10 +351,12 @@ def newCarItem(car_brand_id):
            methods=['GET', 'POST'])
 def editCarItem(car_brand_id, car_item_id):
 
+    if 'username' not in login_session:
+        return redirect(url_for('showLogin'))
+
     editedItem = session.query(CarItem).filter_by(id=car_item_id).one()
     creator = getUserInfo(editedItem.user_id)
-    if 'username' not in login_session or \
-       creator.id != login_session['user_id']:
+    if creator.id != login_session['user_id']:
         flash("You are not authorized to modify the content!")
         return redirect(url_for('showCarItem', car_brand_id=car_brand_id,
                                 car_item_id=car_item_id))
@@ -381,10 +388,12 @@ def editCarItem(car_brand_id, car_item_id):
 @app.route('/car_brand/<int:car_brand_id>/car_item/<int:car_item_id>/delete',
            methods=['GET', 'POST'])
 def deleteCarItem(car_brand_id, car_item_id):
+    if 'username' not in login_session:
+        return redirect(url_for('showLogin'))
+
     itemToDelete = session.query(CarItem).filter_by(id=car_item_id).one()
     creator = getUserInfo(itemToDelete.user_id)
-    if 'username' not in login_session \
-       or creator.id != login_session['user_id']:
+    if creator.id != login_session['user_id']:
         flash("You are not authorized to delete the content!")
         return redirect(url_for('showCarItem', car_brand_id=car_brand_id,
                                 car_item_id=car_item_id))
