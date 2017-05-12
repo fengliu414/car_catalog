@@ -13,11 +13,8 @@ A website that shows various car brands as well as their popular car model
 4. Setup the database <pre>python database_setup.py </pre>
 5. Fill some pre-selected data into the database <pre>python lotsofcars.py</pre>
 6. Run the localhost: <pre>python project.py</pre>
-7. Check the website at: <a href="http://localhost:5000">http://localhost:5000</a>
-
-
+7. Check the website at: <a href="http://localhost:5000">http://localhost:5000</a><br />
 <br />
-<br />
-### Notice:
+### Notice
 The car brands are fixed and can't be modified. However, user can add/modify/delete car models under a specific brand after successfully login.
 
